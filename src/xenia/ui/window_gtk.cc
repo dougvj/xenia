@@ -343,15 +343,234 @@ bool GTKWindow::HandleMouse(GdkEventAny* event) {
   return e.is_handled();
 }
 
+static KeyEvent::Key MapGdkKeyToKeyEventKey(guint key) {
+  switch (key) {
+    case GDK_KEY_Escape:
+      return KeyEvent::Key::kEsc;
+    case GDK_KEY_F1:
+      return KeyEvent::Key::kF1;
+    case GDK_KEY_F2:
+      return KeyEvent::Key::kF2;
+    case GDK_KEY_F3:
+      return KeyEvent::Key::kF3;
+    case GDK_KEY_F4:
+      return KeyEvent::Key::kF4;
+    case GDK_KEY_F5:
+      return KeyEvent::Key::kF5;
+    case GDK_KEY_F6:
+      return KeyEvent::Key::kF6;
+    case GDK_KEY_F7:
+      return KeyEvent::Key::kF7;
+    case GDK_KEY_F8:
+      return KeyEvent::Key::kF8;
+    case GDK_KEY_F9:
+      return KeyEvent::Key::kF9;
+    case GDK_KEY_F10:
+      return KeyEvent::Key::kF10;
+    case GDK_KEY_F11:
+      return KeyEvent::Key::kF11;
+    case GDK_KEY_F12:
+      return KeyEvent::Key::kF12;
+    case GDK_KEY_asciitilde:
+    case GDK_KEY_grave:
+      return KeyEvent::Key::kTick;
+    case GDK_KEY_1:
+    case GDK_KEY_exclam:
+      return KeyEvent::Key::k1;
+    case GDK_KEY_2:
+      return KeyEvent::Key::k2;
+    case GDK_KEY_3:
+      return KeyEvent::Key::k3;
+    case GDK_KEY_4:
+      return KeyEvent::Key::k4;
+    case GDK_KEY_5:
+      return KeyEvent::Key::k5;
+    case GDK_KEY_6:
+      return KeyEvent::Key::k6;
+    case GDK_KEY_7:
+      return KeyEvent::Key::k7;
+    case GDK_KEY_8:
+      return KeyEvent::Key::k8;
+    case GDK_KEY_9:
+      return KeyEvent::Key::k9;
+    case GDK_KEY_0:
+      return KeyEvent::Key::k0;
+    case GDK_KEY_minus:
+    case GDK_KEY_underscore:
+      return KeyEvent::Key::kMinus;
+    case GDK_KEY_equal:
+    case GDK_KEY_plus:
+      return KeyEvent::Key::kEquals;
+    case GDK_KEY_BackSpace:
+      return KeyEvent::Key::kBackspace;
+    case GDK_KEY_Tab:
+      return KeyEvent::Key::kTab;
+    case GDK_KEY_q:
+    case GDK_KEY_Q:
+      return KeyEvent::Key::kQ;
+    case GDK_KEY_w:
+    case GDK_KEY_W:
+      return KeyEvent::Key::kW;
+    case GDK_KEY_e:
+    case GDK_KEY_E:
+      return KeyEvent::Key::kE;
+    case GDK_KEY_r:
+    case GDK_KEY_R:
+      return KeyEvent::Key::kR;
+    case GDK_KEY_t:
+    case GDK_KEY_T:
+      return KeyEvent::Key::kT;
+    case GDK_KEY_y:
+    case GDK_KEY_Y:
+      return KeyEvent::Key::kY;
+    case GDK_KEY_u:
+    case GDK_KEY_U:
+      return KeyEvent::Key::kU;
+    case GDK_KEY_i:
+    case GDK_KEY_I:
+      return KeyEvent::Key::kI;
+    case GDK_KEY_o:
+    case GDK_KEY_O:
+      return KeyEvent::Key::kO;
+    case GDK_KEY_p:
+    case GDK_KEY_P:
+      return KeyEvent::Key::kP;
+    case GDK_KEY_bracketleft:
+    case GDK_KEY_braceleft:
+      return KeyEvent::Key::kLeftBracket;
+    case GDK_KEY_bracketright:
+    case GDK_KEY_braceright:
+      return KeyEvent::Key::kRightBracket;
+    case GDK_KEY_backslash:
+    case GDK_KEY_bar:
+      return KeyEvent::Key::kBackSlash;
+    case GDK_KEY_Caps_Lock:
+      return KeyEvent::Key::kCapsLock;
+    case GDK_KEY_a:
+    case GDK_KEY_A:
+      return KeyEvent::Key::kA;
+    case GDK_KEY_s:
+    case GDK_KEY_S:
+      return KeyEvent::Key::kS;
+    case GDK_KEY_d:
+    case GDK_KEY_D:
+      return KeyEvent::Key::kD;
+    case GDK_KEY_f:
+    case GDK_KEY_F:
+      return KeyEvent::Key::kF;
+    case GDK_KEY_g:
+    case GDK_KEY_G:
+      return KeyEvent::Key::kG;
+    case GDK_KEY_h:
+    case GDK_KEY_H:
+      return KeyEvent::Key::kH;
+    case GDK_KEY_j:
+    case GDK_KEY_J:
+      return KeyEvent::Key::kJ;
+    case GDK_KEY_k:
+    case GDK_KEY_K:
+      return KeyEvent::Key::kK;
+    case GDK_KEY_l:
+    case GDK_KEY_L:
+      return KeyEvent::Key::kL;
+    case GDK_KEY_semicolon:
+    case GDK_KEY_colon:
+      return KeyEvent::Key::kSemiColon;
+    case GDK_KEY_apostrophe:
+    case GDK_KEY_quotedbl:
+      return KeyEvent::Key::kQuote;
+    case GDK_KEY_Return:
+      return KeyEvent::Key::kEnter;
+    case GDK_KEY_Shift_L:
+      return KeyEvent::Key::kLeftShift;
+    case GDK_KEY_z:
+    case GDK_KEY_Z:
+      return KeyEvent::Key::kZ;
+    case GDK_KEY_x:
+    case GDK_KEY_X:
+      return KeyEvent::Key::kX;
+    case GDK_KEY_c:
+    case GDK_KEY_C:
+      return KeyEvent::Key::kC;
+    case GDK_KEY_v:
+    case GDK_KEY_V:
+      return KeyEvent::Key::kV;
+    case GDK_KEY_b:
+    case GDK_KEY_B:
+      return KeyEvent::Key::kB;
+    case GDK_KEY_n:
+    case GDK_KEY_N:
+      return KeyEvent::Key::kN;
+    case GDK_KEY_m:
+    case GDK_KEY_M:
+      return KeyEvent::Key::kM;
+    case GDK_KEY_less:
+    case GDK_KEY_comma:
+      return KeyEvent::Key::kComma;
+    case GDK_KEY_greater:
+    case GDK_KEY_period:
+      return KeyEvent::Key::kPeriod;
+    case GDK_KEY_slash:
+    case GDK_KEY_question:
+      return KeyEvent::Key::kSlash;
+    case GDK_KEY_Shift_R:
+      return KeyEvent::Key::kRightShift;
+    case GDK_KEY_Control_L:
+      return KeyEvent::Key::kLeftControl;
+    case GDK_KEY_Super_L:
+    case GDK_KEY_Super_R:
+      return KeyEvent::Key::kSuper;
+    case GDK_KEY_Alt_L:
+      return KeyEvent::Key::kLeftAlt;
+    case GDK_KEY_space:
+      return KeyEvent::Key::kSpace;
+    case GDK_KEY_Alt_R:
+      return KeyEvent::Key::kRightAlt;
+    case GDK_KEY_Control_R:
+      return KeyEvent::Key::kRightControl;
+    case GDK_KEY_Up:
+      return KeyEvent::Key::kUp;
+    case GDK_KEY_Down:
+      return KeyEvent::Key::kDown;
+    case GDK_KEY_Left:
+      return KeyEvent::Key::kLeft;
+    case GDK_KEY_Right:
+      return KeyEvent::Key::kRight;
+    case GDK_KEY_Insert:
+      return KeyEvent::Key::kInsert;
+    case GDK_KEY_Delete:
+      return KeyEvent::Key::kDelete;
+    case GDK_KEY_Home:
+      return KeyEvent::Key::kHome;
+    case GDK_KEY_End:
+      return KeyEvent::Key::kEnd;
+    case GDK_KEY_Page_Up:
+      return KeyEvent::Key::kPageUp;
+    case GDK_KEY_Page_Down:
+      return KeyEvent::Key::kPageDown;
+    case GDK_KEY_KP_Multiply:
+      return KeyEvent::Key::kNpStar;
+    case GDK_KEY_KP_Subtract:
+      return KeyEvent::Key::kNpMinus;
+    case GDK_KEY_KP_Add:
+      return KeyEvent::Key::kNpPlus;
+    case GDK_KEY_Pause:
+      return KeyEvent::Key::kPause;
+  }
+  return KeyEvent::Key::kNone;
+}
+
 bool GTKWindow::HandleKeyboard(GdkEventKey* event) {
   unsigned int modifiers = event->state;
   bool shift_pressed = modifiers & GDK_SHIFT_MASK;
   bool ctrl_pressed = modifiers & GDK_CONTROL_MASK;
   bool alt_pressed = modifiers & GDK_META_MASK;
   bool super_pressed = modifiers & GDK_SUPER_MASK;
-  auto e =
-      KeyEvent(this, event->hardware_keycode, 1, event->type == GDK_KEY_RELEASE,
-               shift_pressed, ctrl_pressed, alt_pressed, super_pressed);
+  KeyEvent::Key key = MapGdkKeyToKeyEventKey(event->keyval);
+  uint32_t key_char = gdk_keyval_to_unicode(event->keyval);
+  auto e = KeyEvent(this, key, event->keyval, key_char, 1,
+                    event->type == GDK_KEY_RELEASE, shift_pressed, ctrl_pressed,
+                    alt_pressed, super_pressed);
   switch (event->type) {
     case GDK_KEY_PRESS:
       OnKeyDown(&e);
