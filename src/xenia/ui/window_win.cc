@@ -682,7 +682,7 @@ bool Win32Window::HandleMouse(UINT message, WPARAM wParam, LPARAM lParam) {
 
 bool Win32Window::HandleKeyboard(UINT message, WPARAM wParam, LPARAM lParam) {
   auto e = KeyEvent(
-      this, static_cast<int>(wParam), lParam & 0xFFFF0000, !!(lParam & 0x2),
+      this, static_cast<int>(wParam), lParam & 0xFFFF, !!(lParam & 0x40000000),
       !!(GetKeyState(VK_SHIFT) & 0x80), !!(GetKeyState(VK_CONTROL) & 0x80),
       !!(GetKeyState(VK_MENU) & 0x80), !!(GetKeyState(VK_LWIN) & 0x80));
   switch (message) {
